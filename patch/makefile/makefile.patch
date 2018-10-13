@@ -1,0 +1,19 @@
+diff -purN a/Makefile b/Makefile
+--- a/Makefile	2018-10-13 09:05:45.000000000 +0300
++++ b/Makefile	2018-10-13 15:08:30.564016152 +0300
+@@ -1,10 +1,12 @@
+-CXXFLAGS=-std=c++11 -g3
++PVK_CXXFLAGS=-std=gnu++11 -g
++
++all: libprimus_vk.so libnv_vulkan_wrapper.so
+ 
+ libprimus_vk.so: primus_vk.cpp
+-	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
++	g++ $(CXXFLAGS) $(PVK_CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
+ 
+ libnv_vulkan_wrapper.so: nv_vulkan_wrapper.cpp
+-	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
++	g++ $(CXXFLAGS) $(PVK_CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
+ 
+ primus-vk-diag: primus_vk_diag.o
+ 	g++ -g3 -o $@ $^ -lX11 -lvulkan -ldl

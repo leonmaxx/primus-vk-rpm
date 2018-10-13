@@ -1,0 +1,12 @@
+diff -purN a/nv_vulkan_wrapper.cpp b/nv_vulkan_wrapper.cpp
+--- a/nv_vulkan_wrapper.cpp	2018-10-13 09:05:45.000000000 +0300
++++ b/nv_vulkan_wrapper.cpp	2018-10-13 15:36:32.194035525 +0300
+@@ -21,7 +21,7 @@ public:
+     // again asked to load libGL.
+     glLibGL = dlopen("libGL.so.1", RTLD_GLOBAL | RTLD_NOW);
+ 
+-    nvDriver = dlopen("/usr/lib/x86_64-linux-gnu/nvidia/current/libGL.so.1", RTLD_LOCAL | RTLD_LAZY);
++    nvDriver = dlopen(__DRIVER_PATH__, RTLD_LOCAL | RTLD_LAZY);
+     typedef void* (*dlsym_fn)(void *, const char*);
+     static dlsym_fn real_dlsym = (dlsym_fn) dlsym(dlopen("libdl.so.2", RTLD_LAZY), "dlsym");
+     instanceProcAddr = (decltype(instanceProcAddr)) real_dlsym(nvDriver, "vk_icdGetInstanceProcAddr");
