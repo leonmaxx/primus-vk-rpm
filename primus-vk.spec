@@ -20,6 +20,9 @@ Patch2:         gcc32bit.patch
 # Patch nvidia driver path
 Patch3:         driver_path.patch
 
+# Patch to fix crash when running without optirun
+Patch4:         crashfix.patch
+
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
 
@@ -33,12 +36,12 @@ It is basically the same as Primus for OpenGL (https://github.com/amonakov/primu
 %prep
 %setup -q -n primus_vk-master
 %patch0 -p1
-%if 0%{?rhel} || 0%{?fedora} < 26
+%if 0%{?rhel} || 0%{?fedora} < 22
 %patch1 -p1
 %endif
 %patch2 -p1
-sed -i 's#__DRIVER_PATH__#\"%{_driverpath}\"#g' %{PATCH3}
 %patch3 -p1
+%patch4 -p1
 
 %build
 export CXXFLAGS="%{optflags}"
