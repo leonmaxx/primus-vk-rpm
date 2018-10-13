@@ -1,6 +1,6 @@
 Name:           primus-vk
 Version:        %{_version}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Nvidia Vulkan offloading for Bumblebee
 License:        BSD
 Group:          Hardware/Other
