@@ -6,7 +6,7 @@ diff -purN a/primus_vk.cpp b/primus_vk.cpp
  
  VK_LAYER_EXPORT void VKAPI_CALL PrimusVK_DestroySwapchainKHR(VkDevice device, VkSwapchainKHR swapchain, const VkAllocationCallbacks* pAllocator) {
 -    if(swapchain == nullptr) { return;}
-+    if(swapchain == 0) { return;}
++    if(swapchain == VK_NULL_HANDLE) { return;}
    PrimusSwapchain *ch = reinterpret_cast<PrimusSwapchain*>(swapchain);
    TRACE(">> Destroy swapchain: " << (void*) ch->backend);
    // TODO: the Nvidia driver segfaults when passing a chain here?
@@ -15,7 +15,7 @@ diff -purN a/primus_vk.cpp b/primus_vk.cpp
      Fence myfence{ch->display_device};
  
 -    res = device_dispatch[GetKey(ch->display_device)].AcquireNextImageKHR(ch->display_device, ch->backend, timeout, nullptr, myfence.fence, pImageIndex);
-+    res = device_dispatch[GetKey(ch->display_device)].AcquireNextImageKHR(ch->display_device, ch->backend, timeout, 0, myfence.fence, pImageIndex);
++    res = device_dispatch[GetKey(ch->display_device)].AcquireNextImageKHR(ch->display_device, ch->backend, timeout, VK_NULL_HANDLE, myfence.fence, pImageIndex);
      TRACE_PROFILING_EVENT(*pImageIndex, "got image");
  
      myfence.await();
@@ -24,7 +24,7 @@ diff -purN a/primus_vk.cpp b/primus_vk.cpp
    qsi.signalSemaphoreCount = 1;
    qsi.pSignalSemaphores = &semaphore;
 -  device_dispatch[GetKey(ch->render_queue)].QueueSubmit(ch->render_queue, 1, &qsi, nullptr);
-+  device_dispatch[GetKey(ch->render_queue)].QueueSubmit(ch->render_queue, 1, &qsi, 0);
++  device_dispatch[GetKey(ch->render_queue)].QueueSubmit(ch->render_queue, 1, &qsi, VK_NULL_HANDLE);
    TRACE_PROFILING_EVENT(*pImageIndex, "Acquire done");
  
    return res;
@@ -33,6 +33,6 @@ diff -purN a/primus_vk.cpp b/primus_vk.cpp
    {
      std::unique_lock<std::mutex> lock(queueMutex);
 -    display_commands[index]->submit(display_queue, nullptr, sems);
-+    display_commands[index]->submit(display_queue, 0, sems);
++    display_commands[index]->submit(display_queue, VK_NULL_HANDLE, sems);
    }
  }
