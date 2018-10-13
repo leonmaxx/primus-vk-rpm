@@ -7,9 +7,18 @@ Group:          Hardware/Other
 Url:            https://github.com/felixdoerre/primus_vk
 Source0:        %{name}-master.zip
 Source1:        pvkrun
+
+# Patch for makefile to use provided compiler flags
 Patch0:         makefile.patch
+
+# Patch to compile on GCC 4.8
 Patch1:         gcc48.patch
-Patch2:         driver_path.patch
+
+# Patch to compile 32-bit version
+Patch2:         gcc32bit.patch
+
+# Patch nvidia driver path
+Patch3:         driver_path.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
@@ -27,8 +36,9 @@ It is basically the same as Primus for OpenGL (https://github.com/amonakov/primu
 %if 0%{?rhel} || 0%{?fedora} < 26
 %patch1 -p1
 %endif
-sed -i 's#__DRIVER_PATH__#\"%{_driverpath}\"#g' %{PATCH2}
 %patch2 -p1
+sed -i 's#__DRIVER_PATH__#\"%{_driverpath}\"#g' %{PATCH3}
+%patch3 -p1
 
 %build
 export CXXFLAGS="%{optflags}"
