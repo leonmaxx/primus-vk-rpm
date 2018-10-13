@@ -10,5 +10,5 @@ pvkrun vkapp
 ```
 
 # Issues
-Issues with running Vulkan application should be reported to [Primus-vk](https://github.com/felixdoerre/primus_vk) repository.
+Issues with running Vulkan application should be reported to [Primus-vk](https://github.com/felixdoerre/primus_vk) repository.  
 Here only report packaging issues.
