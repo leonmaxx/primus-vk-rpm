@@ -1,3 +1,5 @@
+%define _version %(date +"%Y%m%d")
+
 Name:           primus-vk
 Version:        %{_version}
 Release:        1%{?dist}

@@ -5,6 +5,7 @@
 spec_file="primus-vk.spec"
 work_dir="$PWD/work"
 rpm_dir="$PWD/RPMs"
+srpm_dir="$PWD/RPMs/src"
 datestamp=`date +%Y%m%d`
 #release=1
 
@@ -36,13 +37,13 @@ cp pvkrun $work_dir/SOURCES/
 cp *.patch $work_dir/SOURCES/
 
 echo -e "${GREEN}Building 64-bit package...${NC}"
-rpmbuild -bb "$spec_file" --define "_topdir $work_dir" --define "_rpmdir $rpm_dir" --define "_version $datestamp" 
+rpmbuild -ba "$spec_file" --define "_topdir $work_dir" --define "_rpmdir $rpm_dir" --define "_srcrpmdir $srpm_dir"
 #--define "_driverpath $nvvulkan64"
 
 #cp *.patch $work_dir/SOURCES/
 
 echo -e "${GREEN}Building 32-bit package...${NC}"
-rpmbuild -bb "$spec_file" --target=i686 --define "_topdir $work_dir" --define "_rpmdir $rpm_dir" --define "_version $datestamp" 
+rpmbuild -bb "$spec_file" --target=i686 --define "_topdir $work_dir" --define "_rpmdir $rpm_dir"
 #--define "_driverpath $nvvulkan32"
 
 exit 0
