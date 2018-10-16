@@ -41,7 +41,8 @@ make %{?_smp_mflags}
 %install
 install -D "libnv_vulkan_wrapper.so" "%{buildroot}%{_libdir}/libnv_vulkan_wrapper.so"
 install -D "libprimus_vk.so" "%{buildroot}%{_libdir}/libprimus_vk.so"
-install -m 755 -D "%{SOURCE1}" "%{buildroot}%{_bindir}/pvkrun"
+install -Dm 755 "primus-vk-diag" "%{buildroot}%{_bindir}/primus-vk-diag"
+install -Dm 755 "%{SOURCE1}" "%{buildroot}%{_bindir}/pvkrun"
 install -D "primus_vk.json" "%{buildroot}%{_sysconfdir}/vulkan/implicit_layer.d/primus_vk.json"
 
 %post
@@ -60,12 +61,14 @@ fi
 %doc LICENSE README.md
 %{_libdir}/libnv_vulkan_wrapper.so
 %{_libdir}/libprimus_vk.so
+%{_bindir}/primus-vk-diag
 %{_bindir}/pvkrun
 %{_sysconfdir}/vulkan/implicit_layer.d/primus_vk.json
 
 %changelog
 * Tue Oct 16 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
-- update scripts according to changes
+- update scripts
+- include primus-vk-diag
 
 * Sat Oct 13 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
 - first attemp on rpm packaging
