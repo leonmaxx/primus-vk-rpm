@@ -16,17 +16,9 @@ Patch0:         makefile.patch
 # Patch to compile on GCC 4.8
 Patch1:         gcc48.patch
 
-# Patch to compile 32-bit version
-Patch2:         gcc32bit.patch
-
-# Patch nvidia driver path
-Patch3:         driver_path.patch
-
-# Patch to fix crash when running without optirun
-Patch4:         crashfix.patch
-
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
+BuildRequires:  libxcb-devel
 
 Requires:       vulkan-filesystem
 Requires:       bumblebee
@@ -38,12 +30,9 @@ It is basically the same as Primus for OpenGL (https://github.com/amonakov/primu
 %prep
 %setup -q -n primus_vk-master
 %patch0 -p1
-%if 0%{?rhel} || 0%{?fedora} < 22
+%if 0%{?rhel} || 0%{?fedora} <= 27
 %patch1 -p1
 %endif
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
 export CXXFLAGS="%{optflags}"
@@ -75,5 +64,8 @@ fi
 %{_sysconfdir}/vulkan/implicit_layer.d/primus_vk.json
 
 %changelog
+* Tue Oct 16 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
+- update scripts according to changes
+
 * Sat Oct 13 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
 - first attemp on rpm packaging
