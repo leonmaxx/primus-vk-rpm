@@ -9,6 +9,9 @@ After packages is installed run your vulkan application:
 pvkrun vkapp
 ```
 
+# Builds
+Builds availale on [Releases](https://github.com/leonmaxx/primus-vk-rpm/releases) page, and on [Fedora COPR](https://copr.fedorainfracloud.org/coprs/leonmaxx/primus-vk-rpm/builds/).
+
 # Issues
 Issues with running Vulkan applications should be reported to [Primus-vk](https://github.com/felixdoerre/primus_vk) repository.  
 In this repository report only packaging issues.
