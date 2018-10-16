@@ -25,6 +25,7 @@ Patch3:         epel_vulkan.patch
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
 BuildRequires:  libxcb-devel
+BuildRequires:  mesa-libGL-devel
 
 Requires:       vulkan-filesystem
 Requires:       bumblebee
