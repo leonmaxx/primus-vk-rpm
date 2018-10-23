@@ -1,70 +1,12 @@
-diff -purN a/primus_vk.cpp b/primus_vk.cpp
---- a/primus_vk.cpp	2018-10-15 23:13:25.000000000 +0300
-+++ b/primus_vk.cpp	2018-10-16 19:24:19.100923325 +0300
-@@ -256,7 +256,10 @@ public:
-   VkFence fence;
-   Fence(VkDevice dev): device(dev){
-     // Create fence to ensure that the command buffer has finished executing
--    VkFenceCreateInfo fenceInfo = {.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO, .flags=0};
-+    VkFenceCreateInfo fenceInfo;
-+    fenceInfo.sType=VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-+    fenceInfo.pNext=nullptr;
-+    fenceInfo.flags=0;
-     VK_CHECK_RESULT(device_dispatch[GetKey(device)].CreateFence(device, &fenceInfo, nullptr, &fence));
-   }
-   void await(){
-@@ -273,7 +276,10 @@ class Semaphore{
- public:
-   VkSemaphore sem;
-   Semaphore(VkDevice dev): device(dev){
--    VkSemaphoreCreateInfo semInfo = {.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO, .flags=0};
-+    VkSemaphoreCreateInfo semInfo;
-+    semInfo.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-+    semInfo.pNext=nullptr;
-+    semInfo.flags=0;
-     VK_CHECK_RESULT(device_dispatch[GetKey(device)].CreateSemaphore(device, &semInfo, nullptr, &sem));
-   }
-   ~Semaphore(){
-@@ -444,13 +450,25 @@ class CommandBuffer {
- public:
-   VkCommandBuffer cmd;
-   CommandBuffer(VkDevice device) : device(device) {
--    VkCommandPoolCreateInfo poolInfo = {.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO, .flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, .queueFamilyIndex = 0 };
-+    VkCommandPoolCreateInfo poolInfo;
-+    poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-+    poolInfo.pNext = nullptr;
-+    poolInfo.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-+    poolInfo.queueFamilyIndex = 0;
-     VK_CHECK_RESULT(device_dispatch[GetKey(device)].CreateCommandPool(device, &poolInfo, nullptr, &commandPool));
--    VkCommandBufferAllocateInfo cmdBufAllocateInfo = {.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO, .commandPool=commandPool, .level=VK_COMMAND_BUFFER_LEVEL_PRIMARY, .commandBufferCount = 1};
--
-+    VkCommandBufferAllocateInfo cmdBufAllocateInfo;
-+    cmdBufAllocateInfo.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-+    cmdBufAllocateInfo.pNext=nullptr;
-+    cmdBufAllocateInfo.commandPool=commandPool;
-+    cmdBufAllocateInfo.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-+    cmdBufAllocateInfo.commandBufferCount = 1;
-     VK_CHECK_RESULT(device_dispatch[GetKey(device)].AllocateCommandBuffers(device, &cmdBufAllocateInfo, &cmd));
- 
--    VkCommandBufferBeginInfo cmdBufInfo = {.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-+    VkCommandBufferBeginInfo cmdBufInfo;
-+    cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-+    cmdBufInfo.pNext = nullptr;
-+    cmdBufInfo.flags = 0;
-+    cmdBufInfo.pInheritanceInfo = nullptr;
-     VK_CHECK_RESULT(device_dispatch[GetKey(device)].BeginCommandBuffer(cmd, &cmdBufInfo));
-   }
-   ~CommandBuffer(){
 diff -purN a/primus_vk_diag.cpp b/primus_vk_diag.cpp
---- a/primus_vk_diag.cpp	2018-10-15 23:13:25.000000000 +0300
-+++ b/primus_vk_diag.cpp	2018-10-16 19:17:18.887340905 +0300
-@@ -180,7 +180,8 @@ void GLContext::drawSample(){
+--- a/primus_vk_diag.cpp	2018-10-23 08:14:49.000000000 +0300
++++ b/primus_vk_diag.cpp	2018-10-23 18:37:56.911125386 +0300
+@@ -180,7 +180,7 @@ void GLContext::drawSample(){
    gl->ptr_glClear (GL_COLOR_BUFFER_BIT);
    gl->ptr_glXSwapBuffers (data.display, data.win);
  
 -  auto toSleep = timespec{.tv_nsec=200000000};
-+  timespec toSleep = {0,};
-+  toSleep.tv_nsec = 200000000;
++  timespec toSleep = {0,200000000};
    nanosleep(&toSleep, nullptr);
  
    gl->ptr_glClearColor (1, 0.5, 0, 1);

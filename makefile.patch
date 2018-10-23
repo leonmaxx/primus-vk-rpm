@@ -1,23 +1,20 @@
 diff -purN a/Makefile b/Makefile
 --- a/Makefile	2018-10-16 18:57:51.000000000 +0300
-+++ b/Makefile	2018-10-16 19:15:12.646439879 +0300
-@@ -1,12 +1,13 @@
--CXXFLAGS += -std=gnu++11 -g3
-+PVK_CXXFLAGS=-std=gnu++11 -g
-+PVK_NV_DRIVER_PATH=-DNV_DRIVER_PATH=\"libGLX_nvidia.so.0\"
++++ b/Makefile	2018-10-23 18:34:43.990473144 +0300
+@@ -1,6 +1,7 @@
+ CXXFLAGS += -std=gnu++11 -g3
++CXXFLAGS += -DNV_DRIVER_PATH=\"libGLX_nvidia.so.0\"
  
 -all: libprimus_vk.so libnv_vulkan_wrapper.so
 +all: libprimus_vk.so libnv_vulkan_wrapper.so primus-vk-diag
  
  libprimus_vk.so: primus_vk.cpp
--	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
-+	g++ $(CXXFLAGS) $(PVK_CXXFLAGS) $(PVK_NV_DRIVER_PATH) -I/usr/include/vulkan -shared -fPIC $^ -o $@
- 
+ 	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
+@@ -8,5 +9,5 @@ libprimus_vk.so: primus_vk.cpp
  libnv_vulkan_wrapper.so: nv_vulkan_wrapper.cpp
--	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
-+	g++ $(CXXFLAGS) $(PVK_CXXFLAGS) $(PVK_NV_DRIVER_PATH) -I/usr/include/vulkan -shared -fPIC $^ -o $@
+ 	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
  
 -primus-vk-diag: primus_vk_diag.o
 -	g++ -g3 -o $@ $^ -lX11 -lvulkan -ldl
 +primus-vk-diag: primus_vk_diag.cpp
-+	g++ $(PVK_CXXFLAGS) -o $@ $^ -lX11 -lvulkan -ldl
++	g++ $(CXXFLAGS) -o $@ $^ -lX11 -lvulkan -ldl
