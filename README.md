@@ -15,7 +15,8 @@ Builds availale on [Releases](https://github.com/leonmaxx/primus-vk-rpm/releases
 # Installing
 Just install `primus-vk` package. On 64-bit OS also install 32-bit libs package:
 ```
-dnf install primus-vk primus-vk-libs.i686
+dnf install primus-vk
+setarch i686 dnf install primus-vk-libs
 ```
 
 # Issues
