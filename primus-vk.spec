@@ -13,14 +13,8 @@ Source1:        pvkrun
 # Patch for makefile to use provided compiler flags
 Patch0:         makefile.patch
 
-# Patch to compile on Fedora 29
-Patch1:         fedora29.patch
-
 # Patch to compile on Fedora COPR for EPEL-7 where vulkan_xcb.h header is not available
-Patch2:         epel_vulkan.patch
-
-# Temporary patch
-#Patch3:         gcc48.patch
+Patch1:         epel_vulkan.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
@@ -50,15 +44,9 @@ License:        BSD
 %prep
 %setup -q -n primus_vk-master
 %patch0 -p1
-%if 0%{?fedora} >= 29
+%if 0%{?rhel}
 %patch1 -p1
 %endif
-%if 0%{?rhel}
-%patch2 -p1
-%endif
-#%if 0%{?fedora} <= 28 || 0%{?epel} == 7
-#%patch3 -p1
-#%endif
 
 %build
 %if 0%{?rhel}
