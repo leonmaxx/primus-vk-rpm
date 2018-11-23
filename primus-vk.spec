@@ -7,7 +7,7 @@ Summary:        Primus-Vk Nvidia Vulkan offloading for Bumblebee
 License:        BSD
 Group:          Hardware/Other
 Url:            https://github.com/felixdoerre/primus_vk
-Source0:        %{name}-master.zip
+Source0:        primus_vk-master.zip
 Source1:        pvkrun
 
 # Patch for makefile to use provided compiler flags
@@ -20,7 +20,7 @@ Patch1:         fedora29.patch
 Patch2:         epel_vulkan.patch
 
 # Temporary patch
-Patch3:         gcc48.patch
+#Patch3:         gcc48.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
@@ -56,9 +56,9 @@ License:        BSD
 %if 0%{?rhel}
 %patch2 -p1
 %endif
-%if 0%{?fedora} <= 28 || 0%{?epel} == 7
-%patch3 -p1
-%endif
+#%if 0%{?fedora} <= 28 || 0%{?epel} == 7
+#%patch3 -p1
+#%endif
 
 %build
 %if 0%{?rhel}
@@ -76,14 +76,27 @@ install -Dm 755 "%{SOURCE1}" "%{buildroot}%{_bindir}/pvkrun"
 install -D "primus_vk.json" "%{buildroot}%{_sysconfdir}/vulkan/implicit_layer.d/primus_vk.json"
 
 %post
-if [ ! -f /etc/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
-    cp /etc/vulkan/icd.d/nvidia_icd.json /etc/vulkan/icd.d/nvidia_icd.json.primus-vk
-    sed -i "s/libGLX_nvidia.so.0/libnv_vulkan_wrapper.so/g" /etc/vulkan/icd.d/nvidia_icd.json
+if [ -f /etc/vulkan/icd.d/nvidia_icd.json ]; then
+	if [ ! -f /etc/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
+		cp /etc/vulkan/icd.d/nvidia_icd.json /etc/vulkan/icd.d/nvidia_icd.json.primus-vk
+		sed -i "s/libGLX_nvidia.so.0/libnv_vulkan_wrapper.so/g" /etc/vulkan/icd.d/nvidia_icd.json
+	fi
+fi
+if [ -f /usr/share/vulkan/icd.d/nvidia_icd.json ]; then
+	if [ ! -f /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
+		cp /usr/share/vulkan/icd.d/nvidia_icd.json /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk
+		sed -i "s/libGLX_nvidia.so.0/libnv_vulkan_wrapper.so/g" /usr/share/vulkan/icd.d/nvidia_icd.json
+	fi
 fi
 
 %postun
-if [ $1 == 0 ] && [ -f /etc/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
-    mv /etc/vulkan/icd.d/nvidia_icd.json.primus-vk /etc/vulkan/icd.d/nvidia_icd.json
+if [ $1 == 0 ]; then
+	if [ -f /etc/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
+		mv /etc/vulkan/icd.d/nvidia_icd.json.primus-vk /etc/vulkan/icd.d/nvidia_icd.json
+	fi
+	if [ -f /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
+		mv /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk /usr/share/vulkan/icd.d/nvidia_icd.json
+	fi
 fi
 
 %files
