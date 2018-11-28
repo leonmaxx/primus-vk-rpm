@@ -64,27 +64,24 @@ install -Dm 755 "%{SOURCE1}" "%{buildroot}%{_bindir}/pvkrun"
 install -D "primus_vk.json" "%{buildroot}%{_sysconfdir}/vulkan/implicit_layer.d/primus_vk.json"
 
 %post
-if [ -f /etc/vulkan/icd.d/nvidia_icd.json ]; then
-	if [ ! -f /etc/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
-		cp /etc/vulkan/icd.d/nvidia_icd.json /etc/vulkan/icd.d/nvidia_icd.json.primus-vk
-		sed -i "s/libGLX_nvidia.so.0/libnv_vulkan_wrapper.so/g" /etc/vulkan/icd.d/nvidia_icd.json
+ICDLIST=$(find /etc/vulkan/icd.d/ /usr/share/vulkan/icd.d/ -name "nvidia_icd*.json" -type f)
+for ICDFILE in $ICDLIST; do
+	if [ ! -f $ICDFILE.primus-vk ]; then
+		echo Updating: $ICDFILE
+		cp $ICDFILE $ICDFILE.primus-vk
+		sed -i "s/libGLX_nvidia.so.0/libnv_vulkan_wrapper.so/g" $ICDFILE
 	fi
-fi
-if [ -f /usr/share/vulkan/icd.d/nvidia_icd.json ]; then
-	if [ ! -f /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
-		cp /usr/share/vulkan/icd.d/nvidia_icd.json /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk
-		sed -i "s/libGLX_nvidia.so.0/libnv_vulkan_wrapper.so/g" /usr/share/vulkan/icd.d/nvidia_icd.json
-	fi
-fi
+done
 
 %postun
 if [ $1 == 0 ]; then
-	if [ -f /etc/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
-		mv /etc/vulkan/icd.d/nvidia_icd.json.primus-vk /etc/vulkan/icd.d/nvidia_icd.json
-	fi
-	if [ -f /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk ]; then
-		mv /usr/share/vulkan/icd.d/nvidia_icd.json.primus-vk /usr/share/vulkan/icd.d/nvidia_icd.json
-	fi
+	ICDLIST=$(find /etc/vulkan/icd.d/ /usr/share/vulkan/icd.d/ -name "nvidia_icd*.json" -type f)
+	for ICDFILE in $ICDLIST; do
+		if [ -f $ICDFILE.primus-vk ]; then
+			echo Restore: $ICDFILE
+			mv $ICDFILE.primus-vk $ICDFILE
+		fi
+	done
 fi
 
 %files
@@ -100,8 +97,12 @@ fi
 
 
 %changelog
+* Wed Nov 28 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
+- updated primus-vk sources
+- updated install scripts
+
 * Tue Oct 16 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
-- update scripts
+- updated scripts
 - include primus-vk-diag
 
 * Sat Oct 13 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
