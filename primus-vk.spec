@@ -9,12 +9,10 @@ Group:          Hardware/Other
 Url:            https://github.com/felixdoerre/primus_vk
 Source0:        primus_vk-master.zip
 Source1:        pvkrun
+Source2:        primus_vk_wrapper.json
 
 # Patch for makefile to use provided compiler flags
 Patch0:         makefile.patch
-
-# Patch to compile on Fedora COPR for EPEL-7 where vulkan_xcb.h header is not available
-Patch1:         epel_vulkan.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
@@ -26,7 +24,7 @@ BuildRequires:  vulkan-validation-layers-devel
 
 Requires:       vulkan-filesystem
 Requires:       bumblebee
-Requires:       %{name}-libs
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
 This Vulkan layer can be used to do GPU offloading. Typically you want to display an image rendered on a more powerful GPU on a display managed by an internal GPU.
@@ -44,16 +42,9 @@ License:        BSD
 %prep
 %setup -q -n primus_vk-master
 %patch0 -p1
-%if 0%{?rhel}
-%patch1 -p1
-%endif
 
 %build
-%if 0%{?rhel}
-export CXXFLAGS="%{optflags} -I."
-%else
 export CXXFLAGS="%{optflags}"
-%endif
 make %{?_smp_mflags}
 
 %install
@@ -61,26 +52,21 @@ install -D "libnv_vulkan_wrapper.so" "%{buildroot}%{_libdir}/libnv_vulkan_wrappe
 install -D "libprimus_vk.so" "%{buildroot}%{_libdir}/libprimus_vk.so"
 install -Dm 755 "primus-vk-diag" "%{buildroot}%{_bindir}/primus-vk-diag"
 install -Dm 755 "%{SOURCE1}" "%{buildroot}%{_bindir}/pvkrun"
-install -D "primus_vk.json" "%{buildroot}%{_sysconfdir}/vulkan/implicit_layer.d/primus_vk.json"
+install -D "primus_vk.json" "%{buildroot}%{_datadir}/vulkan/implicit_layer.d/primus_vk.json"
+install -D %{SOURCE2} "%{buildroot}%{_datadir}/vulkan/icd.d/primus_vk_wrapper.json"
 
 %post
 ICDLIST=$(find /etc/vulkan/icd.d/ /usr/share/vulkan/icd.d/ -name "nvidia_icd*.json" -type f)
 for ICDFILE in $ICDLIST; do
-	if [ ! -f $ICDFILE.primus-vk ]; then
-		echo Updating: $ICDFILE
-		cp $ICDFILE $ICDFILE.primus-vk
-		sed -i "s/libGLX_nvidia.so.0/libnv_vulkan_wrapper.so/g" $ICDFILE
-	fi
+	mv $ICDFILE $ICDFILE.pvk
 done
 
 %postun
 if [ $1 == 0 ]; then
-	ICDLIST=$(find /etc/vulkan/icd.d/ /usr/share/vulkan/icd.d/ -name "nvidia_icd*.json" -type f)
-	for ICDFILE in $ICDLIST; do
-		if [ -f $ICDFILE.primus-vk ]; then
-			echo Restore: $ICDFILE
-			mv $ICDFILE.primus-vk $ICDFILE
-		fi
+	ICDPVKLIST=$(find /etc/vulkan/icd.d/ /usr/share/vulkan/icd.d/ -name "nvidia_icd*.json.pvk" -type f)
+	for ICDFILEPVK in $ICDPVKLIST; do
+		ICDFILE=$(echo $ICDFILEPVK | sed 's/.pvk//')
+		mv $ICDFILEPVK $ICDFILE
 	done
 fi
 
@@ -89,7 +75,8 @@ fi
 %doc LICENSE README.md
 %{_bindir}/primus-vk-diag
 %{_bindir}/pvkrun
-%{_sysconfdir}/vulkan/implicit_layer.d/primus_vk.json
+%{_datadir}/vulkan/implicit_layer.d/primus_vk.json
+%{_datadir}/vulkan/icd.d/primus_vk_wrapper.json
 
 %files libs
 %{_libdir}/libnv_vulkan_wrapper.so
@@ -97,6 +84,9 @@ fi
 
 
 %changelog
+* Sun Dec 9 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
+- use '/usr/share/vulkan' dir for *.json files
+
 * Wed Nov 28 2018 Leonid Maksymchuk <leonmaxx@4menteam.com>
 - updated primus-vk sources
 - updated install scripts

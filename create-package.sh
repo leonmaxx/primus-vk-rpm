@@ -20,6 +20,7 @@ mkdir -p $rpm_dir
 
 cp primus_vk-master.zip $work_dir/SOURCES/
 cp pvkrun $work_dir/SOURCES/
+cp primus_vk_wrapper.json $work_dir/SOURCES/
 cp *.patch $work_dir/SOURCES/
 
 echo -e "${GREEN}Building 64-bit package...${NC}"
