@@ -52,8 +52,8 @@ install -D "libnv_vulkan_wrapper.so" "%{buildroot}%{_libdir}/libnv_vulkan_wrappe
 install -D "libprimus_vk.so" "%{buildroot}%{_libdir}/libprimus_vk.so"
 install -Dm 755 "primus-vk-diag" "%{buildroot}%{_bindir}/primus-vk-diag"
 install -Dm 755 "%{SOURCE1}" "%{buildroot}%{_bindir}/pvkrun"
-install -D "primus_vk.json" "%{buildroot}%{_datadir}/vulkan/implicit_layer.d/primus_vk.json"
-install -D %{SOURCE2} "%{buildroot}%{_datadir}/vulkan/icd.d/primus_vk_wrapper.json"
+install -Dm 644 "primus_vk.json" "%{buildroot}%{_datadir}/vulkan/implicit_layer.d/primus_vk.json"
+install -Dm 644 %{SOURCE2} "%{buildroot}%{_datadir}/vulkan/icd.d/primus_vk_wrapper.json"
 
 %post
 ICDLIST=$(find /etc/vulkan/icd.d/ /usr/share/vulkan/icd.d/ -name "nvidia_icd*.json" -type f)
