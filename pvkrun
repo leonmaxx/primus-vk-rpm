@@ -1,2 +1,2 @@
 #!/bin/sh
-ENABLE_PRIMUS_LAYER=1 optirun $@
+exec ENABLE_PRIMUS_LAYER=1 optirun $@
