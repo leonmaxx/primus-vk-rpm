@@ -1,0 +1,19 @@
+diff -purN a/primus_vk.cpp b/primus_vk.cpp
+--- a/primus_vk.cpp	2019-01-19 11:10:58.000000000 +0200
++++ b/primus_vk.cpp	2019-01-19 18:18:55.116926798 +0200
+@@ -176,9 +176,14 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL Prim
+   // store the table by key
+   {
+     scoped_lock l(global_lock);
++	InstanceInfo instInfo;
++	instInfo.instance = *pInstance;
++	instInfo.render = render;
++	instInfo.display = display;
++	instInfo.secondarySpawned = false;
+ 
+     instance_dispatch[GetKey(*pInstance)] = dispatchTable;
+-    instance_info[GetKey(*pInstance)] = InstanceInfo{.instance = *pInstance, .render = render, .display=display, .secondarySpawned = false};
++    instance_info[GetKey(*pInstance)] = instInfo;
+   }
+ 
+   return VK_SUCCESS;

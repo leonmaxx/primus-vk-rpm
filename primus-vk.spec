@@ -14,6 +14,9 @@ Source2:        primus_vk_wrapper.json
 # Patch for makefile to use provided compiler flags
 Patch0:         makefile.patch
 
+# Patch for makefile to use provided compiler flags
+Patch1:         gcc48.patch
+
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
 BuildRequires:  libxcb-devel
@@ -42,6 +45,7 @@ License:        BSD
 %prep
 %setup -q -n primus_vk-master
 %patch0 -p1
+%patch1 -p1
 
 %build
 export CXXFLAGS="%{optflags}"
@@ -50,7 +54,7 @@ make %{?_smp_mflags}
 %install
 install -D "libnv_vulkan_wrapper.so" "%{buildroot}%{_libdir}/libnv_vulkan_wrapper.so"
 install -D "libprimus_vk.so" "%{buildroot}%{_libdir}/libprimus_vk.so"
-install -Dm 755 "primus-vk-diag" "%{buildroot}%{_bindir}/primus-vk-diag"
+install -Dm 755 "primus_vk_diag" "%{buildroot}%{_bindir}/primus_vk_diag"
 install -Dm 755 "%{SOURCE1}" "%{buildroot}%{_bindir}/pvkrun"
 install -Dm 644 "primus_vk.json" "%{buildroot}%{_datadir}/vulkan/implicit_layer.d/primus_vk.json"
 install -Dm 644 %{SOURCE2} "%{buildroot}%{_datadir}/vulkan/icd.d/primus_vk_wrapper.json"
@@ -73,7 +77,7 @@ fi
 %files
 %defattr(-,root,root)
 %doc LICENSE README.md
-%{_bindir}/primus-vk-diag
+%{_bindir}/primus_vk_diag
 %{_bindir}/pvkrun
 %{_datadir}/vulkan/implicit_layer.d/primus_vk.json
 %{_datadir}/vulkan/icd.d/primus_vk_wrapper.json
