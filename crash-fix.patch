@@ -1,0 +1,13 @@
+diff -purN a/primus_vk.cpp b/primus_vk.cpp
+--- a/primus_vk.cpp	2019-02-26 23:15:55.000000000 +0200
++++ b/primus_vk.cpp	2019-02-27 21:38:52.094587471 +0200
+@@ -727,7 +727,8 @@ VK_LAYER_EXPORT void VKAPI_CALL PrimusVK
+   PrimusSwapchain *ch = reinterpret_cast<PrimusSwapchain*>(swapchain);
+   TRACE(">> Destroy swapchain: " << (void*) ch->backend);
+   ch->stop();
+-  device_dispatch[GetKey(device)].DestroySwapchainKHR(device, ch->backend, pAllocator);
++  // Nvidia driver crashes here:
++  // device_dispatch[GetKey(device)].DestroySwapchainKHR(device, ch->backend, pAllocator);
+   delete ch;
+ }
+ VK_LAYER_EXPORT VkResult VKAPI_CALL PrimusVK_GetSwapchainImagesKHR(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) {
