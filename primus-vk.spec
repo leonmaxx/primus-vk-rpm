@@ -2,7 +2,7 @@
 
 Name:           primus-vk
 Version:        %{_version}
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Primus-Vk Nvidia Vulkan offloading for Bumblebee
 License:        BSD
 Group:          Hardware/Other
@@ -13,9 +13,7 @@ Source2:        primus_vk_wrapper.json
 
 # Patch for makefile to use provided compiler flags
 Patch0:         makefile.patch
-
-# Patch for makefile to use provided compiler flags
-Patch1:         gcc48.patch
+Patch1:         crash-fix.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
@@ -34,8 +32,8 @@ This Vulkan layer can be used to do GPU offloading. Typically you want to displa
 It is basically the same as Primus for OpenGL (https://github.com/amonakov/primus). However it does not wrap the Vulkan API from the application but is directly integrated into Vulkan as a layer (which seems to be the intendend way to implement such logic).
 
 %package libs
-Version:        %{_version}
-Release:        1%{?dist}
+Version:        %{version}
+Release:        %{release}
 Summary:        Primus-Vk libraries
 License:        BSD
 

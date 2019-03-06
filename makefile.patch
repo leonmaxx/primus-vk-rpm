@@ -1,7 +1,9 @@
 diff -purN a/Makefile b/Makefile
---- a/Makefile	2019-01-19 11:10:58.000000000 +0200
-+++ b/Makefile	2019-01-19 18:15:32.160233495 +0200
-@@ -1,6 +1,7 @@
+--- a/Makefile	2019-02-26 23:15:55.000000000 +0200
++++ b/Makefile	2019-02-27 20:28:01.234000816 +0200
+@@ -10,8 +10,9 @@ datarootdir   = ${PREFIX}/share
+ datadir       = ${datarootdir}
+ 
  CXXFLAGS += -std=gnu++11 -g3
 +CXXFLAGS += -DNV_DRIVER_PATH=\"libGLX_nvidia.so.0\"
  
@@ -10,9 +12,12 @@ diff -purN a/Makefile b/Makefile
  
  libprimus_vk.so: primus_vk.cpp
  	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
-@@ -9,4 +10,4 @@ libnv_vulkan_wrapper.so: nv_vulkan_wrapp
+@@ -20,7 +21,7 @@ libnv_vulkan_wrapper.so: nv_vulkan_wrapp
  	g++ $(CXXFLAGS) -I/usr/include/vulkan -shared -fPIC $^ -o $@
  
  primus_vk_diag: primus_vk_diag.o
 -	g++ -g3 -o $@ $^ -lX11 -lvulkan -ldl
-+	g++ $(CXXFLAGS) -o $@ $^ -lX11 -lvulkan -ldl
++	g++ $(CXXFLAGS) -g3 -o $@ $^ -lX11 -lvulkan -ldl
+ 
+ install:
+ 	$(INSTALL) "libnv_vulkan_wrapper.so" \
