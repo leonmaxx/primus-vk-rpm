@@ -13,7 +13,6 @@ Source2:        primus_vk_wrapper.json
 
 # Patch for makefile to use provided compiler flags
 Patch0:         makefile.patch
-Patch1:         crash-fix.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  vulkan-devel
@@ -43,7 +42,6 @@ License:        BSD
 %prep
 %setup -q -n primus_vk-master
 %patch0 -p1
-%patch1 -p1
 
 %build
 export CXXFLAGS="%{optflags}"
